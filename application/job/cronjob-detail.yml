@@ -4,10 +4,13 @@ metadata:
   name: print-date
 spec:
   schedule: "*/5 * * * *"
+  concurrencyPolicy: "Forbid"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5  
   jobTemplate:
     spec:
-      backoffLimit: 5
-      ttlSecondsAfterFinished: 100
+      backoffLimit: 5  # the number to times kubernetes will try to run the container before marking the job as failed
+      ttlSecondsAfterFinished: 100  # 
       template:
         spec:
           containers:
@@ -20,6 +23,3 @@ spec:
           restartPolicy: OnFailure
       parallelism: 1
       completions: 1
-  concurrencyPolicy: "Forbid"
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 5
