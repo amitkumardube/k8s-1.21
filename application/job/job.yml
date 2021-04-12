@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job1
+spec:
+  activeDeadlineSeconds: 20  # job will remain active only for 5 seconds
+  completions: 2  # it will be marked as completed when 2 pods completes successfully
+  parallelism: 3 # These number of jobs can be run in parallel
+  ttlSecondsAfterFinished: 20  # The resource related to successful or failed job will be cleaned after 20 seconds
+  #completionMode: Indexed # NonIndexed (default) - in alpha with kubenetes 1.21
+  template:
+    spec:
+      containers:
+        - name: job
+          image: busybox
+          args:
+            - /bin/sh
+            - -c
+            - date; echo sleeping....; sleep 10s; echo exiting...; date
+      restartPolicy: Never  # OnFailure . the container will never restart even if failed.
